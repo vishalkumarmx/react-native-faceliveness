@@ -1,6 +1,6 @@
 package com.faceliveness
 
-internal data class LivenessResult(
+data class LivenessResult(
     val left: Int = 0,
     val top: Int = 0,
     val right: Int = 0,

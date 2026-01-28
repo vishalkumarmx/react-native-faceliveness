@@ -22,7 +22,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.math.abs
 
-@Suppress("DEPRECATION")
+@Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
 class FaceLivenessView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
@@ -42,6 +42,9 @@ class FaceLivenessView @JvmOverloads constructor(
     private val reactContext: ReactContext? = context as? ReactContext
 
     private val surfaceView: SurfaceView = SurfaceView(context).apply {
+        layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+    }
+    private val overlayView: LivenessOverlayView = LivenessOverlayView(context).apply {
         layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
     }
 
@@ -65,6 +68,7 @@ class FaceLivenessView @JvmOverloads constructor(
 
     init {
         addView(surfaceView)
+        addView(overlayView)
         surfaceView.holder.setFormat(ImageFormat.NV21)
         surfaceView.holder.addCallback(this)
         reactContext?.addLifecycleEventListener(this)
@@ -89,6 +93,17 @@ class FaceLivenessView @JvmOverloads constructor(
             if (isActive) {
                 restartCamera()
             }
+        }
+    }
+
+    fun toggleCamera() {
+        cameraId = if (cameraId == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            Camera.CameraInfo.CAMERA_FACING_BACK
+        } else {
+            Camera.CameraInfo.CAMERA_FACING_FRONT
+        }
+        if (isActive) {
+            restartCamera()
         }
     }
 
@@ -172,7 +187,12 @@ class FaceLivenessView @JvmOverloads constructor(
             try {
                 val result = engineWrapper?.detect(dataCopy, width, height, orientation)
                 if (result != null) {
+                    post {
+                        overlayView.updateResult(result, threshold)
+                    }
                     emitLiveness(result)
+                } else {
+                    post { overlayView.clear() }
                 }
             } catch (e: Exception) {
                 emitError("DETECT_FAILED", e.message ?: "Detection failed")
@@ -235,6 +255,7 @@ class FaceLivenessView @JvmOverloads constructor(
         }
         camera?.release()
         camera = null
+        overlayView.clear()
     }
 
     private fun restartCamera() {
@@ -253,6 +274,7 @@ class FaceLivenessView @JvmOverloads constructor(
 
         previewWidth = size.width
         previewHeight = size.height
+        overlayView.setPreviewSize(previewWidth, previewHeight)
 
         setCameraDisplayOrientation(cam)
     }

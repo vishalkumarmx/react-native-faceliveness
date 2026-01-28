@@ -4,6 +4,7 @@ import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 
+@Suppress("DEPRECATION", "OVERRIDE_DEPRECATION")
 class FaceLivenessViewManager : SimpleViewManager<FaceLivenessView>() {
 
     override fun getName(): String = "FaceLivenessView"
@@ -42,7 +43,8 @@ class FaceLivenessViewManager : SimpleViewManager<FaceLivenessView>() {
     override fun getCommandsMap(): MutableMap<String, Int> {
         return mutableMapOf(
             "start" to 1,
-            "stop" to 2
+            "stop" to 2,
+            "toggleCamera" to 3
         )
     }
 
@@ -50,6 +52,7 @@ class FaceLivenessViewManager : SimpleViewManager<FaceLivenessView>() {
         when (commandId) {
             1 -> view.start()
             2 -> view.stop()
+            3 -> view.toggleCamera()
         }
     }
 
@@ -57,6 +60,7 @@ class FaceLivenessViewManager : SimpleViewManager<FaceLivenessView>() {
         when (commandId) {
             "start" -> view.start()
             "stop" -> view.stop()
+            "toggleCamera" -> view.toggleCamera()
         }
     }
 }

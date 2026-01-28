@@ -56,6 +56,10 @@ export function stop(ref: FaceLivenessViewRef | null) {
   dispatchCommand(ref, 'stop');
 }
 
+export function toggleCamera(ref: FaceLivenessViewRef | null) {
+  dispatchCommand(ref, 'toggleCamera');
+}
+
 export function FaceLivenessView(props: FaceLivenessViewProps) {
   return <NativeFaceLivenessView {...props} />;
 }

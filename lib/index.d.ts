@@ -32,5 +32,6 @@ export declare function FaceLivenessView(
 
 export declare function start(ref: any): void;
 export declare function stop(ref: any): void;
+export declare function toggleCamera(ref: any): void;
 
 export default FaceLivenessView;
