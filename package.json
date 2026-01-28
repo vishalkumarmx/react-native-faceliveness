@@ -1,0 +1,22 @@
+{
+  "name": "react-native-faceliveness",
+  "version": "0.1.0",
+  "description": "Android face liveness detection using NCNN models",
+  "main": "lib/index.js",
+  "react-native": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "android/build.gradle",
+    "android/src",
+    "lib",
+    "src",
+    "react-native.config.js",
+    "README.md",
+    "LICENSE"
+  ],
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-native": ">=0.68.0"
+  },
+  "license": "Apache-2.0"
+}
